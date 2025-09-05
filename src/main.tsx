@@ -5,18 +5,22 @@ import { ConfigProvider } from 'antd';
 import koKR from 'antd/locale/ko_KR';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router';
+import { queryClient } from './utils/queryClient';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ConfigProvider
-      locale={koKR}
-      theme={{
-        token: {
-          colorPrimary: '#0064FF',
-        },
-      }}
-    >
-      <RouterProvider router={router} />
-    </ConfigProvider>
+    <QueryClientProvider client={queryClient}>
+      <ConfigProvider
+        locale={koKR}
+        theme={{
+          token: {
+            colorPrimary: '#0064FF',
+          },
+        }}
+      >
+        <RouterProvider router={router} />
+      </ConfigProvider>
+    </QueryClientProvider>
   </StrictMode>
 );
