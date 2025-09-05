@@ -9,16 +9,15 @@ const LoginPage = () => {
   const { useBreakpoint } = Grid;
   const screens = useBreakpoint();
 
-  const [id, setId] = useState('');
   const [password, setPassword] = useState('');
 
   // TODO: 로그인 로직 추가
   const handleLogin = () => {
-    if (id === 'admin' && password === '1234') {
+    if (password === '1234') {
       message.success('로그인 성공');
       navigate('/admin', { replace: true });
     } else {
-      message.error('아이디 또는 비밀번호가 일치하지 않습니다.');
+      message.error('비밀번호가 일치하지 않습니다.');
     }
   };
 
@@ -37,15 +36,15 @@ const LoginPage = () => {
         }}
       >
         <Title level={2}>관리자 로그인</Title>
-        <Input id='id' placeholder='아이디' size='large' value={id} onChange={(e) => setId(e.target.value)} />
         <Input.Password
           id='password'
           placeholder='비밀번호'
           size='large'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onPressEnter={handleLogin}
         />
-        <Button type='primary' size='large' style={{ width: '100%' }} onClick={handleLogin} disabled={!id || !password}>
+        <Button type='primary' size='large' style={{ width: '100%' }} onClick={handleLogin} disabled={!password}>
           로그인
         </Button>
       </Content>
