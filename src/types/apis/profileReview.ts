@@ -12,7 +12,7 @@ export interface GetPendingReviewListResponseData {
   };
 }
 
-export type GetPendingReviewListResponse = BaseResponse<GetPendingReviewListResponseData>;
+export type GetPendingReviewListResponse = BaseResponse<GetPendingReviewListResponseData[]>;
 
 export interface GetPendingReviewDetailResponseData {
   id: string;
