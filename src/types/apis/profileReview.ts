@@ -13,15 +13,16 @@ export interface GetPendingReviewListResponseData {
 export type GetPendingReviewListResponse = BaseResponse<GetPendingReviewListResponseData[]>;
 
 export interface GetPendingReviewDetailResponseData {
-	id: string;
-	lessonType: LessonType;
-	resorts: Resort[];
-	languages: LanguageSkill[];
-	experience: number;
-	certificationLevel: CertificationLevel;
+	tempId: string;
+	certificationOriginalFileName: string;
 	certificationDownloadUrl: string;
 	profileImageDownloadUrl: string;
 	introduction: string;
+	experience: string;
+	lessonType: LessonType;
+	resorts: Resort[];
+	languages: LanguageSkill[];
+	certificationLevel: CertificationLevel;
 }
 
 export type GetPendingReviewDetailResponse = BaseResponse<GetPendingReviewDetailResponseData>;
