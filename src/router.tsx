@@ -1,6 +1,7 @@
 import DefaultLayout from '@/components/layouts/DefaultLayout';
 import LoginPage from '@/pages/LoginPage';
 import { createBrowserRouter } from 'react-router-dom';
+import ProfileReviewPage from './pages/ProfileReview';
 
 export const router = createBrowserRouter([
   {
@@ -21,7 +22,8 @@ export const router = createBrowserRouter([
       },
       {
         path: 'profile-review',
-        element: <div>Profile Review</div>,
+        element: <ProfileReviewPage />,
+        children: [],
       },
     ],
   },
