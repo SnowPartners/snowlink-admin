@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
+import { saveToSessionStorage, loadFromSessionStorage, removeFromSessionStorage } from '@/utils/storage';
 
 interface UserInfo {
 	id: string;
@@ -8,18 +10,47 @@ interface UserInfo {
 	role: string;
 }
 
-interface AuthStore {
+interface AuthState {
 	accessToken: string | null;
 	userInfo: UserInfo | null;
+}
+
+interface AuthStore extends AuthState {
 	setAccessToken: (accessToken: string | null) => void;
 	setUserInfo: (userInfo: UserInfo | null) => void;
 	clearAuth: () => void;
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
+// sessionStorage 키
+const STORAGE_KEY = 'snowlink_auth_store';
+
+// 초기 상태 로드
+const initialState: AuthState = loadFromSessionStorage<AuthState>(STORAGE_KEY) || {
 	accessToken: null,
 	userInfo: null,
-	setAccessToken: (accessToken) => set({ accessToken }),
-	setUserInfo: (userInfo) => set({ userInfo }),
-	clearAuth: () => set({ accessToken: null, userInfo: null }),
-}));
+};
+
+export const useAuthStore = create<AuthStore>()(
+	immer((set, get) => ({
+		...initialState,
+
+		setAccessToken: (accessToken) =>
+			set((state) => {
+				state.accessToken = accessToken;
+				saveToSessionStorage(STORAGE_KEY, get());
+			}),
+
+		setUserInfo: (userInfo) =>
+			set((state) => {
+				state.userInfo = userInfo;
+				saveToSessionStorage(STORAGE_KEY, get());
+			}),
+
+		clearAuth: () =>
+			set((state) => {
+				state.accessToken = null;
+				state.userInfo = null;
+				removeFromSessionStorage(STORAGE_KEY);
+			}),
+	}))
+);
