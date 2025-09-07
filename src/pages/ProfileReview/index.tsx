@@ -79,7 +79,7 @@ const ProfileReviewPage = () => {
     reviewStatus: item.status,
     userId: item.userId,
     tempInstructorId: item.tempInstructorId,
-    reviewDate: formatDateToKorean(item.tempInstructorCreatedAt),
+    reviewDate: formatDateToKorean(item.tempInstructorUpdatedAt),
   }));
 
   return (

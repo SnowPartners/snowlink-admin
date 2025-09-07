@@ -1,6 +1,6 @@
 import { REJECT_REASON_DROPDOWN_ITEMS } from '@/constants/profileReview';
 import { useModalStore } from '@/stores/useModalStore';
-import { Dropdown, Flex, Button, Space, Typography, Modal, type MenuProps, message } from 'antd';
+import { Dropdown, Flex, Button, Space, Typography, Modal, type MenuProps, App } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useState } from 'react';
 import { DownOutlined } from '@ant-design/icons';
@@ -9,6 +9,7 @@ import { queryClient } from '@/utils/queryClient';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { postRejectReview } from '@/apis/profileReview';
 import { useNavigate } from 'react-router-dom';
+import type { ReviewReason } from '@/types/profile';
 
 interface ProfileRejectConfirmModalProps {
   tempInstructorId: string;
@@ -17,14 +18,16 @@ interface ProfileRejectConfirmModalProps {
 const ProfileRejectConfirmModal = ({ tempInstructorId }: ProfileRejectConfirmModalProps) => {
   const navigate = useNavigate();
   const { closeModal } = useModalStore();
+  const { message } = App.useApp();
+
   const [rejectDescription, setRejectDescription] = useState('');
-  const [selectedRejectReason, setSelectedRejectReason] = useState('');
+  const [selectedRejectReason, setSelectedRejectReason] = useState<ReviewReason | null>(null);
 
   const isFormValid = selectedRejectReason;
 
   const profileRejectMutation = useMutation({
     mutationKey: [QUERY_KEYS.profileReview.postRejectReview],
-    mutationFn: postRejectReview,
+    mutationFn: (request: { category: ReviewReason; detail: string }) => postRejectReview(tempInstructorId, request),
     onSuccess: () => {
       closeModal();
       message.success('거절되었습니다.');
@@ -37,13 +40,16 @@ const ProfileRejectConfirmModal = ({ tempInstructorId }: ProfileRejectConfirmMod
   });
 
   const handleRejectConfirm = () => {
-    profileRejectMutation.mutate(tempInstructorId);
+    profileRejectMutation.mutate({
+      category: selectedRejectReason as ReviewReason,
+      detail: rejectDescription,
+    });
   };
 
   const dropdownItems: MenuProps['items'] = REJECT_REASON_DROPDOWN_ITEMS.map((item) => ({
     key: item.key,
     label: item.label,
-    onClick: () => setSelectedRejectReason(item.label),
+    onClick: () => setSelectedRejectReason(item.key as ReviewReason),
   }));
 
   return (
@@ -54,7 +60,9 @@ const ProfileRejectConfirmModal = ({ tempInstructorId }: ProfileRejectConfirmMod
             <Typography.Text strong>거절 사유:</Typography.Text>
             <Dropdown menu={{ items: dropdownItems }} trigger={['click']}>
               <Typography.Text style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
-                {selectedRejectReason || '거절 사유 선택'}
+                {selectedRejectReason
+                  ? REJECT_REASON_DROPDOWN_ITEMS.find((item) => item.key === selectedRejectReason)?.label
+                  : '거절 사유 선택'}
                 <DownOutlined />
               </Typography.Text>
             </Dropdown>

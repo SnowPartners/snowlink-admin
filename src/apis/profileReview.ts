@@ -4,6 +4,7 @@ import type {
   GetPendingReviewDetailResponse,
   GetPendingReviewListResponse,
   PostApproveReviewResponse,
+  PostRejectReviewRequest,
   PostRejectReviewResponse,
 } from '@/types/apis/profileReview';
 
@@ -24,7 +25,10 @@ export const postApproveReview = async (tempId: string) => {
   return response.data;
 };
 
-export const postRejectReview = async (tempId: string) => {
-  const response = await tokenAxios.post<PostRejectReviewResponse>(ENDPOINTS.profileReview.postRejectReview(tempId));
+export const postRejectReview = async (tempId: string, request: PostRejectReviewRequest) => {
+  const response = await tokenAxios.post<PostRejectReviewResponse>(
+    ENDPOINTS.profileReview.postRejectReview(tempId),
+    request
+  );
   return response.data;
 };
