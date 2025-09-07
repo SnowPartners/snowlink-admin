@@ -1,7 +1,7 @@
 import { postApproveReview } from '@/apis/profileReview';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useModalStore } from '@/stores/useModalStore';
-import { message, Button, Space, Modal, Flex } from 'antd';
+import { Button, Space, Modal, Flex, App } from 'antd';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '@/utils/queryClient';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ interface ProfileApproveConfirmModalProps {
 const ProfileApproveConfirmModal = ({ tempInstructorId }: ProfileApproveConfirmModalProps) => {
   const navigate = useNavigate();
   const { closeModal } = useModalStore();
+  const { message } = App.useApp();
 
   const profileApproveMutation = useMutation({
     mutationKey: [QUERY_KEYS.profileReview.postApproveReview],
