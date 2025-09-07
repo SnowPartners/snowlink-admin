@@ -1,7 +1,7 @@
 import { getPendingReviewDetail } from '@/apis/profileReview';
 import ErrorWithRetry from '@/components/fallback/ErrorWithRetry';
 import Loading from '@/components/fallback/Loading';
-import { LessonTypeMap } from '@/constants/profileReview';
+import { LanguageSkillMap, LessonTypeMap } from '@/constants/profileReview';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useModalStore } from '@/stores/useModalStore';
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -20,7 +20,6 @@ const ProfileReviewDetailPage = () => {
     queryKey: [QUERY_KEYS.profileReview.getPendingReviewDetail, tempInstructorId],
     queryFn: () => getPendingReviewDetail(tempInstructorId!),
     enabled: !!tempInstructorId,
-    staleTime: 60 * 60 * 1000,
   });
 
   if (isLoading) {
@@ -66,7 +65,7 @@ const ProfileReviewDetailPage = () => {
           <Descriptions.Item label='강습 종목'>{LessonTypeMap[profileReviewDetail.data.lessonType]}</Descriptions.Item>
           <Descriptions.Item label='강습 스키장'>{profileReviewDetail.data.resorts.join(', ')}</Descriptions.Item>
           <Descriptions.Item label='외국어 능력'>
-            {profileReviewDetail.data.languages.join(', ') || '-'}
+            {profileReviewDetail.data.languages.map((language) => LanguageSkillMap[language]).join(', ') || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='경력'>{profileReviewDetail.data.experience}년</Descriptions.Item>
           <Descriptions.Item label='자격증 등급'>{profileReviewDetail.data.certificationLevel}</Descriptions.Item>
