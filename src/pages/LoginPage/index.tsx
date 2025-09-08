@@ -1,24 +1,36 @@
-import { Button, Grid, Input, Layout, message } from 'antd';
+import { Button, Grid, Input, Layout, App } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import Title from 'antd/es/typography/Title';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { postLogin } from '@/apis/auth';
+import { QUERY_KEYS } from '@/constants/queryKeys';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { useBreakpoint } = Grid;
   const screens = useBreakpoint();
+  const { message } = App.useApp();
 
   const [password, setPassword] = useState('');
-
-  // TODO: 로그인 로직 추가
-  const handleLogin = () => {
-    if (password === '1234') {
-      message.success('로그인 성공');
+  const loginMutation = useMutation({
+    mutationFn: postLogin,
+    mutationKey: [QUERY_KEYS.auth.postLogin],
+    onSuccess: (data) => {
+      message.success('로그인에 성공했어요');
+      useAuthStore.getState().setAccessToken(data.data.accessToken);
+      useAuthStore.getState().setUserInfo(data.data.userInfo);
       navigate('/admin', { replace: true });
-    } else {
-      message.error('비밀번호가 일치하지 않습니다.');
-    }
+    },
+    onError: () => {
+      message.error('비밀번호가 일치하지 않아요');
+    },
+  });
+
+  const handleLogin = () => {
+    loginMutation.mutate({ password });
   };
 
   return (
