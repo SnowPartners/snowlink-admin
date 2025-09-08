@@ -73,7 +73,6 @@ const ProfileReviewPage = () => {
   if (!profileReviewList) return <ErrorWithRetry />;
 
   const tableData: ProfileReviewTableData[] = profileReviewList.data.map((item) => ({
-    key: item.id,
     reviewId: item.id,
     name: item.userName,
     reviewStatus: item.status,
@@ -91,6 +90,7 @@ const ProfileReviewPage = () => {
         columns={columns}
         dataSource={tableData}
         loading={isLoading}
+        rowKey={(record) => record.reviewId}
         onRow={(record) => ({
           style: { cursor: 'pointer' },
           onClick: () => {
