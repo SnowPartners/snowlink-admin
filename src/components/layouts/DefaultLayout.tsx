@@ -26,6 +26,10 @@ const DefaultLayout = () => {
       return ['users'];
     } else if (path.includes('/admin/profile-review')) {
       return ['profileReview'];
+    } else if (path === '/admin/instructors') {
+      return ['instructors'];
+    } else if (path === '/admin/owners') {
+      return ['owners'];
     }
 
     return ['dashboard'];
@@ -34,7 +38,7 @@ const DefaultLayout = () => {
   useMemo(() => {
     const path = location.pathname;
 
-    if (path === '/admin/users' || path.includes('/admin/profile-review')) {
+    if (path === '/admin/owners' || path === '/admin/instructors' || path.includes('/admin/profile-review')) {
       if (!openKeys.includes('userGroup')) {
         setOpenKeys(['userGroup']);
       }
@@ -125,7 +129,12 @@ const DefaultLayout = () => {
                 icon: <UserOutlined />,
                 label: '사용자',
                 children: [
-                  { key: 'users', label: '사용자 관리', onClick: () => handleMenuClick('/admin/users') },
+                  { key: 'owners', label: '업체 관리', onClick: () => handleMenuClick('/admin/owners') },
+                  {
+                    key: 'instructors',
+                    label: '강사 관리',
+                    onClick: () => handleMenuClick('/admin/instructors'),
+                  },
                   {
                     key: 'profileReview',
                     label: '프로필 심사',
