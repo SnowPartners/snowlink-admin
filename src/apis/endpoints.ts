@@ -8,4 +8,10 @@ export const ENDPOINTS = {
     postApproveReview: (tempId: string) => `/api/linksnow/admin/reviews/approve/${tempId}`,
     postRejectReview: (tempId: string) => `/api/linksnow/admin/reviews/reject/${tempId}`,
   },
+  users: {
+    getOwnerList: '/api/linksnow/admin/owners',
+    getOwnerDetail: (ownerId: string) => `/api/linksnow/admin/owners/${ownerId}`,
+    getInstructorList: '/api/linksnow/admin/instructors',
+    getInstructorDetail: (instructorId: string) => `/api/linksnow/admin/instructors/${instructorId}`,
+  },
 };

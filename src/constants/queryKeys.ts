@@ -8,4 +8,10 @@ export const QUERY_KEYS = {
     postApproveReview: 'postApproveReview',
     postRejectReview: 'postRejectReview',
   },
+  users: {
+    getOwnerList: 'getOwnerList',
+    getOwnerDetail: 'getOwnerDetail',
+    getInstructorList: 'getInstructorList',
+    getInstructorDetail: 'getInstructorDetail',
+  },
 };
