@@ -20,6 +20,7 @@ const ProfileReviewDetailPage = () => {
     queryKey: [QUERY_KEYS.profileReview.getPendingReviewDetail, tempInstructorId],
     queryFn: () => getPendingReviewDetail(tempInstructorId!),
     enabled: !!tempInstructorId,
+    staleTime: 1000 * 60 * 5,
   });
 
   if (isLoading) {
