@@ -137,7 +137,7 @@ const DefaultLayout = () => {
                   },
                   {
                     key: 'profileReview',
-                    label: '프로필 심사',
+                    label: '강사 프로필 심사',
                     onClick: () => handleMenuClick('/admin/profile-review'),
                   },
                 ],
