@@ -14,4 +14,9 @@ export const QUERY_KEYS = {
     getInstructorList: 'getInstructorList',
     getInstructorDetail: 'getInstructorDetail',
   },
+  certificationReview: {
+    getCertificationRenewalPendingList: 'getCertificationRenewalPendingList',
+    postApproveCertificationRenewal: 'postApproveCertificationRenewal',
+    postRejectCertificationRenewal: 'postRejectCertificationRenewal',
+  },
 };
