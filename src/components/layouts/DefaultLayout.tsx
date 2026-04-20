@@ -1,10 +1,14 @@
-import { Grid, Layout, Menu, theme, Button } from 'antd';
+import { Grid, Layout, Menu, theme, Button, Avatar, Badge } from 'antd';
 import Sider from 'antd/es/layout/Sider';
-import { HomeOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, UserOutlined, MenuOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useMemo } from 'react';
 import Logo from '@/assets/snowlink_logo.svg';
 import ModalPortal from '@/components/common/Portal';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/constants/queryKeys';
+import { getPendingReviewList } from '@/apis/profileReview';
+import { getCertificationRenewalPendingList } from '@/apis/certificationReview';
 
 const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -16,6 +20,16 @@ const DefaultLayout = () => {
 	const { token } = theme.useToken();
 	const [openKeys, setOpenKeys] = useState<string[]>([]);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+	const { data: profileReviewPendingList } = useQuery({
+		queryKey: [QUERY_KEYS.profileReview.getPendingReviewList],
+		queryFn: getPendingReviewList,
+		staleTime: 5 * 60 * 1000,
+	});
+	const { data: certificationRenewalPendingList } = useQuery({
+		queryKey: [QUERY_KEYS.certificationReview.getCertificationRenewalPendingList],
+		queryFn: getCertificationRenewalPendingList,
+		staleTime: 5 * 60 * 1000,
+	});
 
 	const selectedKeys = useMemo(() => {
 		const path = location.pathname;
@@ -36,6 +50,10 @@ const DefaultLayout = () => {
 
 		return ['dashboard'];
 	}, [location.pathname]);
+
+	const profileReviewPendingCount = profileReviewPendingList?.data?.length ?? 0;
+	const certificationRenewalPendingCount = certificationRenewalPendingList?.data?.length ?? 0;
+	const totalPendingCount = profileReviewPendingCount + certificationRenewalPendingCount;
 
 	useMemo(() => {
 		const path = location.pathname;
@@ -72,6 +90,7 @@ const DefaultLayout = () => {
 		<Layout style={{ minHeight: '100vh' }}>
 			<Header
 				style={{
+					height: 52,
 					paddingInline: 20,
 					display: 'flex',
 					gap: 8,
@@ -80,6 +99,7 @@ const DefaultLayout = () => {
 					backgroundColor: token.colorPrimary,
 					color: 'white',
 					userSelect: 'none',
+					boxShadow: '0 2px 8px rgba(36, 91, 255, 0.25)',
 				}}
 			>
 				<div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -93,7 +113,16 @@ const DefaultLayout = () => {
 					)}
 					<img src={Logo} alt='logo' style={{ fill: 'white', cursor: 'pointer' }} onClick={() => navigate('/admin')} />
 				</div>
-				<h1 style={{ color: 'white', fontSize: 16, fontWeight: 600 }}>스노우링크 관리자 페이지</h1>
+				<div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+					<span style={{ color: 'rgba(255,255,255,0.86)', fontSize: 13, fontWeight: 500 }}>스노우링크 관리자 페이지</span>
+					<div style={{ width: 1, height: 16, backgroundColor: 'rgba(255,255,255,0.25)' }} />
+					<div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+						<Avatar size={24} style={{ backgroundColor: 'rgba(255,255,255,0.22)', color: '#fff', fontWeight: 700, fontSize: 11 }}>
+							A
+						</Avatar>
+						<span style={{ color: 'rgba(255,255,255,0.9)', fontSize: 12, fontWeight: 600 }}>관리자</span>
+					</div>
+				</div>
 			</Header>
 
 			<Layout>
@@ -104,17 +133,18 @@ const DefaultLayout = () => {
 					trigger={null}
 					width={240}
 					style={{
-						backgroundColor: 'white',
+						backgroundColor: '#fff',
 						color: token.colorText,
 						height: 'auto',
+						borderRight: '1px solid #eef1f6',
 						// md 이하에서 오버레이로 표시
 						...(!screens.md
 							? {
 									position: 'fixed',
-									top: 64,
+									top: 52,
 									left: mobileMenuOpen ? 0 : -240,
 									zIndex: mobileMenuOpen ? 1000 : 998,
-									height: 'calc(100vh - 64px)',
+									height: 'calc(100vh - 52px)',
 									transition: 'left 0.3s ease, z-index 0.3s ease',
 									overflow: 'hidden',
 									visibility: mobileMenuOpen ? 'visible' : 'hidden',
@@ -127,14 +157,19 @@ const DefaultLayout = () => {
 						items={[
 							{
 								key: 'dashboard',
-								icon: <HomeOutlined />,
+								icon: <AppstoreOutlined />,
 								label: '대시보드',
 								onClick: () => handleMenuClick('/admin'),
 							},
 							{
 								key: 'userGroup',
 								icon: <UserOutlined />,
-								label: '사용자',
+								label: (
+									<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+										<span>사용자</span>
+										{totalPendingCount > 0 ? <Badge count={totalPendingCount} size='small' color='#ef4444' /> : null}
+									</div>
+								),
 								children: [
 									{ key: 'owners', label: '업체 관리', onClick: () => handleMenuClick('/admin/owners') },
 									{
@@ -144,21 +179,41 @@ const DefaultLayout = () => {
 									},
 									{
 										key: 'profileReview',
-										label: '강사 프로필 심사',
+										label: (
+											<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+												<span>강사 프로필 심사</span>
+												{profileReviewPendingCount > 0 ? (
+													<Badge count={profileReviewPendingCount} size='small' color='#ef4444' />
+												) : null}
+											</div>
+										),
 										onClick: () => handleMenuClick('/admin/profile-review'),
 									},
 									{
 										key: 'certificationRenewalReview',
-										label: '자격증 갱신 심사',
+										label: (
+											<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+												<span>자격증 갱신 심사</span>
+												{certificationRenewalPendingCount > 0 ? (
+													<Badge count={certificationRenewalPendingCount} size='small' color='#ef4444' />
+												) : null}
+											</div>
+										),
 										onClick: () => handleMenuClick('/admin/certification-renewal-review'),
 									},
 								],
+							},
+							{
+								key: 'matchingManage',
+								icon: <UnorderedListOutlined />,
+								label: '매칭 관리',
+								onClick: () => handleMenuClick('/admin'),
 							},
 						]}
 						selectedKeys={selectedKeys}
 						openKeys={openKeys}
 						onOpenChange={handleOpenChange}
-						style={{ backgroundColor: 'white', color: token.colorText, height: '100%', userSelect: 'none' }}
+						style={{ backgroundColor: '#fff', color: token.colorText, height: '100%', userSelect: 'none', paddingTop: 8 }}
 					/>
 				</Sider>
 				<Content
@@ -166,7 +221,7 @@ const DefaultLayout = () => {
 						padding: !screens.md ? 12 : 24,
 						minHeight: 0,
 						overflow: 'auto',
-						backgroundColor: 'white',
+						backgroundColor: '#f5f7fb',
 						// md 이하에서 메뉴가 열려있을 때 오버레이 추가
 						...(!screens.md
 							? {

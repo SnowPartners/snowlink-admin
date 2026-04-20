@@ -42,3 +42,36 @@ button {
   line-height: 1;
   cursor: pointer;
 }
+
+#root {
+  min-height: 100vh;
+}
+
+.ant-layout {
+  background: #f5f7fb;
+}
+
+.ant-menu {
+  border-inline-end: none !important;
+}
+
+.ant-menu-sub.ant-menu-inline {
+  background: #fff !important;
+}
+
+.ant-menu-light .ant-menu-item-selected {
+  background: #eef2ff !important;
+  color: #245bff !important;
+  font-weight: 600;
+}
+
+.ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title {
+  color: #245bff !important;
+}
+
+.ant-table-wrapper .ant-table-thead > tr > th {
+  background: #fafbfe !important;
+  color: #6b7280 !important;
+  font-size: 12px;
+  font-weight: 600;
+}
