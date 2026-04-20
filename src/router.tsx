@@ -3,12 +3,12 @@ import LoginPage from '@/pages/LoginPage';
 import { createBrowserRouter } from 'react-router-dom';
 import ProfileReviewPage from './pages/ProfileReview';
 import ProfileReviewDetailPage from './pages/ProfileReviewDetail';
-import Title from 'antd/es/typography/Title';
 import InstructorListPage from './pages/Instructors';
 import InstructorDetailPage from './pages/InstructorDetail';
 import OwnerListPage from './pages/Owners';
 import OwnerDetailPage from './pages/OwnerDetail';
 import CertificationRenewalReviewPage from './pages/CertificationRenewalReview';
+import DashboardPage from './pages/Dashboard';
 
 export const router = createBrowserRouter([
 	{
@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
 		children: [
 			{
 				index: true,
-				element: <Title level={3}>스노우링크 관리자 페이지입니다.</Title>,
+				element: <DashboardPage />,
 			},
 			{
 				path: 'instructors',

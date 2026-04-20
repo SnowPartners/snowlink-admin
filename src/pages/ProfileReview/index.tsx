@@ -4,9 +4,10 @@ import Loading from '@/components/fallback/Loading';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { formatDateToKorean } from '@/utils/dateFormat';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Flex, Table } from 'antd';
-import { ReloadOutlined } from '@ant-design/icons';
+import { Input, Table, Tag } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useMemo, useState } from 'react';
 
 interface ProfileReviewTableColumn {
   title: string;
@@ -58,10 +59,10 @@ const columns: ProfileReviewTableColumn[] = [
 
 const ProfileReviewPage = () => {
   const navigate = useNavigate();
+  const [searchKeyword, setSearchKeyword] = useState('');
   const {
     data: profileReviewList,
     isLoading,
-    refetch,
   } = useQuery({
     queryKey: [QUERY_KEYS.profileReview.getPendingReviewList],
     queryFn: getPendingReviewList,
@@ -81,16 +82,81 @@ const ProfileReviewPage = () => {
     reviewDate: formatDateToKorean(item.tempInstructorUpdatedAt),
   }));
 
+  const filteredData = useMemo(() => {
+    const normalizedSearch = searchKeyword.trim().toLowerCase();
+    return tableData.filter((item) => {
+      if (!normalizedSearch) {
+        return true;
+      }
+      return [item.reviewId, item.name, item.userId, item.tempInstructorId, item.reviewStatus]
+        .join(' ')
+        .toLowerCase()
+        .includes(normalizedSearch);
+    });
+  }, [searchKeyword, tableData]);
+
+  const reviewStatusCount = filteredData.length;
+
   return (
-    <Flex vertical gap={16}>
-      <Button type='primary' onClick={() => refetch()} icon={<ReloadOutlined />} style={{ width: 'fit-content' }}>
-        새로고침
-      </Button>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+      <div>
+        <h2 style={{ fontSize: 30, lineHeight: 1.15, fontWeight: 700, color: '#111827', marginBottom: 8 }}>
+          강사 프로필 심사
+        </h2>
+        <p style={{ fontSize: 13, color: '#9ca3af' }}>프로필 심사 대기 건을 확인하고 승인 또는 거절을 진행합니다.</p>
+      </div>
+
+      <div
+        style={{
+          background: '#fff',
+          borderRadius: 12,
+          border: '1px solid #eff2f8',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+          padding: 16,
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ fontSize: 13, color: '#6b7280', fontWeight: 600 }}>심사 대기 현황</div>
+          <Tag color='blue' style={{ borderRadius: 999 }}>
+            대기 {reviewStatusCount}건
+          </Tag>
+        </div>
+      </div>
+      <div
+        style={{
+          background: '#fff',
+          borderRadius: 12,
+          border: '1px solid #eff2f8',
+          boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            padding: '12px 16px',
+            borderBottom: '1px solid #f0f2f7',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+          }}
+        >
+          <Input
+            allowClear
+            value={searchKeyword}
+            onChange={(event) => setSearchKeyword(event.target.value)}
+            placeholder='심사 ID, 이름, 사용자 ID 검색...'
+            prefix={<SearchOutlined style={{ color: '#9ca3af' }} />}
+            style={{ maxWidth: 520 }}
+          />
+          <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>총 {filteredData.length}건</span>
+        </div>
+        
       <Table
         columns={columns}
-        dataSource={tableData}
+        dataSource={filteredData}
         loading={isLoading}
         rowKey={(record) => record.reviewId}
+        pagination={false}
         onRow={(record) => ({
           style: { cursor: 'pointer' },
           onClick: () => {
@@ -98,7 +164,8 @@ const ProfileReviewPage = () => {
           },
         })}
       />
-    </Flex>
+      </div>
+    </div>
   );
 };
 
