@@ -9,6 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { getPendingReviewList } from '@/apis/profileReview';
 import { getCertificationRenewalPendingList } from '@/apis/certificationReview';
+import { getInstructorList, getOwnerList } from '@/apis/users';
 
 const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -20,6 +21,18 @@ const DefaultLayout = () => {
 	const { token } = theme.useToken();
 	const [openKeys, setOpenKeys] = useState<string[]>([]);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+	const { data: ownerList } = useQuery({
+		queryKey: [QUERY_KEYS.users.getOwnerList],
+		queryFn: getOwnerList,
+		staleTime: 5 * 60 * 1000,
+		select: (response) => response.data,
+	});
+	const { data: instructorList } = useQuery({
+		queryKey: [QUERY_KEYS.users.getInstructorList],
+		queryFn: getInstructorList,
+		staleTime: 5 * 60 * 1000,
+		select: (response) => response.data,
+	});
 	const { data: profileReviewPendingList } = useQuery({
 		queryKey: [QUERY_KEYS.profileReview.getPendingReviewList],
 		queryFn: getPendingReviewList,
@@ -51,9 +64,11 @@ const DefaultLayout = () => {
 		return ['dashboard'];
 	}, [location.pathname]);
 
+	const ownerCount = ownerList?.length ?? 0;
+	const instructorCount = instructorList?.length ?? 0;
 	const profileReviewPendingCount = profileReviewPendingList?.data?.length ?? 0;
 	const certificationRenewalPendingCount = certificationRenewalPendingList?.data?.length ?? 0;
-	const totalPendingCount = profileReviewPendingCount + certificationRenewalPendingCount;
+	const totalUserSectionCount = ownerCount + instructorCount + profileReviewPendingCount + certificationRenewalPendingCount;
 
 	useMemo(() => {
 		const path = location.pathname;
@@ -167,14 +182,28 @@ const DefaultLayout = () => {
 								label: (
 									<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
 										<span>사용자</span>
-										{totalPendingCount > 0 ? <Badge count={totalPendingCount} size='small' color='#ef4444' /> : null}
+										<Badge count={totalUserSectionCount} showZero size='small' color='#ef4444' />
 									</div>
 								),
 								children: [
-									{ key: 'owners', label: '업체 관리', onClick: () => handleMenuClick('/admin/owners') },
+									{
+										key: 'owners',
+										label: (
+											<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+												<span>업체 관리</span>
+												<Badge count={ownerCount} showZero size='small' color='#ef4444' />
+											</div>
+										),
+										onClick: () => handleMenuClick('/admin/owners'),
+									},
 									{
 										key: 'instructors',
-										label: '강사 관리',
+										label: (
+											<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+												<span>강사 관리</span>
+												<Badge count={instructorCount} showZero size='small' color='#ef4444' />
+											</div>
+										),
 										onClick: () => handleMenuClick('/admin/instructors'),
 									},
 									{
@@ -182,9 +211,7 @@ const DefaultLayout = () => {
 										label: (
 											<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
 												<span>강사 프로필 심사</span>
-												{profileReviewPendingCount > 0 ? (
-													<Badge count={profileReviewPendingCount} size='small' color='#ef4444' />
-												) : null}
+												<Badge count={profileReviewPendingCount} showZero size='small' color='#ef4444' />
 											</div>
 										),
 										onClick: () => handleMenuClick('/admin/profile-review'),
@@ -194,9 +221,7 @@ const DefaultLayout = () => {
 										label: (
 											<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
 												<span>자격증 갱신 심사</span>
-												{certificationRenewalPendingCount > 0 ? (
-													<Badge count={certificationRenewalPendingCount} size='small' color='#ef4444' />
-												) : null}
+												<Badge count={certificationRenewalPendingCount} showZero size='small' color='#ef4444' />
 											</div>
 										),
 										onClick: () => handleMenuClick('/admin/certification-renewal-review'),
