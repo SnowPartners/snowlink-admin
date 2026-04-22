@@ -59,7 +59,7 @@ const DashboardPage = () => {
       <Row gutter={[12, 12]}>
         <Col xs={24} sm={12} lg={6}>
           <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 18 }}>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>🏢 등록된 업체</div>
+            <div style={{ fontSize: 14, color: '#6b7280', marginBottom: 8 }}>🏢 등록된 업체</div>
             <div style={{ fontSize: 38, fontWeight: 700, color: '#2563eb', lineHeight: 1.1 }}>
               {formatNumber(ownerCount)} <span style={{ fontSize: 14, color: '#6b7280' }}>개</span>
             </div>
@@ -67,7 +67,7 @@ const DashboardPage = () => {
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 18 }}>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>🎿 등록된 강사</div>
+            <div style={{ fontSize: 14, color: '#6b7280', marginBottom: 8 }}>🎿 등록된 강사</div>
             <div style={{ fontSize: 38, fontWeight: 700, color: '#7c3aed', lineHeight: 1.1 }}>
               {formatNumber(instructorCount)} <span style={{ fontSize: 14, color: '#6b7280' }}>명</span>
             </div>
@@ -75,7 +75,7 @@ const DashboardPage = () => {
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 18 }}>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>📋 구인 건수</div>
+            <div style={{ fontSize: 14, color: '#6b7280', marginBottom: 8 }}>📋 구인 건수</div>
             <div style={{ fontSize: 38, fontWeight: 700, color: '#d97706', lineHeight: 1.1 }}>
               {formatNumber(settlementStatistics?.totalCount ?? 0)} <span style={{ fontSize: 14, color: '#6b7280' }}>건</span>
             </div>
@@ -83,7 +83,7 @@ const DashboardPage = () => {
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 18 }}>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>✅ 매칭 완료</div>
+            <div style={{ fontSize: 14, color: '#6b7280', marginBottom: 8 }}>✅ 매칭 완료</div>
             <div style={{ fontSize: 38, fontWeight: 700, color: '#059669', lineHeight: 1.1 }}>
               {formatNumber(settlementStatistics?.completedCount ?? 0)} <span style={{ fontSize: 14, color: '#6b7280' }}>건</span>
             </div>
@@ -94,7 +94,7 @@ const DashboardPage = () => {
       <Row gutter={[12, 12]}>
         <Col xs={24} lg={12}>
           <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 18 }}>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>💰 총 거래액</div>
+            <div style={{ fontSize: 14, color: '#6b7280', marginBottom: 8 }}>💰 총 거래액</div>
             <div style={{ fontSize: 38, fontWeight: 700, color: '#0f766e', lineHeight: 1.1 }}>
               {formatNumber(settlementStatistics?.totalAmount ?? 0)} <span style={{ fontSize: 14, color: '#6b7280' }}>원</span>
             </div>

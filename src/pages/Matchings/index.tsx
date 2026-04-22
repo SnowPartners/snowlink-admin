@@ -15,7 +15,7 @@ type StatusFilter =
 	| 'PAYMENT_WAIT'
 	| 'MATCHING_WAIT'
 	| 'LESSON_WAIT'
-	| 'IN_PROGRESS'
+	| 'APPROVED'
 	| 'COMPLETED'
 	| 'CANCELLED';
 
@@ -23,9 +23,11 @@ const getRowStatusKey = (item: MatchingHistoryItem): StatusFilter => {
 	const m = (item.matchingStatus ?? '').toUpperCase();
 	const l = (item.lessonPostStatus ?? '').toUpperCase();
 
-	if (m.includes('CANCEL') || l.includes('CANCEL') || m.includes('REJECT')) return 'CANCELLED';
-	if (m.includes('COMPLETED') || l.includes('COMPLETED') || m.includes('FINISHED') || l.includes('FINISHED')) return 'COMPLETED';
-	if (m.includes('IN_PROGRESS') || l.includes('IN_PROGRESS') || m.includes('ONGOING')) return 'IN_PROGRESS';
+	if (m.includes('CANCEL') || l === 'CANCELED' || l === 'CANCELLED' || m.includes('REJECT')) return 'CANCELLED';
+	if (m.includes('COMPLETED') || l.includes('COMPLETED') || m.includes('FINISHED') || l === 'FINISHED') return 'COMPLETED';
+	if (m.includes('APPROVED') || l === 'IN_PROGRESS' || m.includes('ONGOING')) return 'APPROVED';
+	if (l === 'MATCHED') return 'LESSON_WAIT';
+	if (l === 'RECRUITING') return 'MATCHING_WAIT';
 	if (
 		(m.includes('PAYMENT') || l.includes('PAYMENT')) &&
 		(m.includes('WAIT') || m.includes('PENDING') || l.includes('WAIT') || l.includes('PENDING'))
@@ -89,7 +91,7 @@ const MatchingsPage = () => {
 		{ key: 'PAYMENT_WAIT', label: '결제대기' },
 		{ key: 'MATCHING_WAIT', label: '매칭대기' },
 		{ key: 'LESSON_WAIT', label: '강습대기' },
-		{ key: 'IN_PROGRESS', label: '강습중' },
+		{ key: 'APPROVED', label: '강습중' },
 		{ key: 'COMPLETED', label: '강습종료' },
 		{ key: 'CANCELLED', label: '강습취소' },
 	];
