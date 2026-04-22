@@ -140,7 +140,17 @@ const MatchingsPage = () => {
 			render: (_, record) => {
 				const style = getMatchingStatusChip(record.matchingStatus);
 				return (
-					<Tag style={{ border: 'none', borderRadius: 999, margin: 0, color: style.color, backgroundColor: style.backgroundColor }}>
+					<Tag
+						style={{
+							border: 'none',
+							borderRadius: 999,
+							margin: 0,
+							padding: '2px 10px',
+							fontWeight: 600,
+							color: style.color,
+							backgroundColor: style.backgroundColor,
+						}}
+					>
 						{style.text}
 					</Tag>
 				);

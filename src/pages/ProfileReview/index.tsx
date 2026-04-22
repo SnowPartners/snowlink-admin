@@ -42,7 +42,7 @@ const ProfileReviewPage = () => {
   const tableData: ProfileReviewTableData[] = profileReviewList.data.map((item) => ({
     reviewId: item.id,
     name: item.userName,
-    reviewStatus: item.status,
+    reviewStatus: '심사중',
     userId: item.userId,
     tempInstructorId: item.tempInstructorId,
     reviewDate: formatDateToKorean(item.tempInstructorUpdatedAt),
@@ -86,6 +86,13 @@ const ProfileReviewPage = () => {
       title: '심사 상태',
       dataIndex: 'reviewStatus',
       key: 'reviewStatus',
+      render: () => (
+        <Tag
+          style={{ margin: 0, border: 'none', borderRadius: 999, padding: '2px 10px', fontWeight: 600, color: '#b45309', backgroundColor: '#fef3c7' }}
+        >
+          심사중
+        </Tag>
+      ),
     },
     {
       title: '사용자 ID',
@@ -150,7 +157,7 @@ const ProfileReviewPage = () => {
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ fontSize: 13, color: '#6b7280', fontWeight: 600 }}>심사 대기 현황</div>
-          <Tag color='blue' style={{ borderRadius: 999 }}>
+          <Tag color='blue' style={{ borderRadius: 999, padding: '2px 10px', fontWeight: 600 }}>
             대기 {reviewStatusCount}건
           </Tag>
         </div>

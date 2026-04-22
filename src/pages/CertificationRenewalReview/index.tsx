@@ -109,7 +109,7 @@ const CertificationRenewalReviewPage = () => {
 			title: '신청 등급',
 			dataIndex: 'requestedCertificationLevel',
 			key: 'requestedCertificationLevel',
-			render: (value: string) => <Tag color='blue'>{value}</Tag>,
+			render: (value: string) => <Tag color='blue' style={{ padding: '2px 10px', fontWeight: 600 }}>{value}</Tag>,
 		},
 		{
 			title: '첨부 파일',
@@ -166,7 +166,7 @@ const CertificationRenewalReviewPage = () => {
 				}}
 			>
 				<div style={{ fontSize: 13, color: '#6b7280', fontWeight: 600 }}>갱신 심사 대기 현황</div>
-				<Tag color='blue' style={{ borderRadius: 999 }}>
+				<Tag color='blue' style={{ borderRadius: 999, padding: '2px 10px', fontWeight: 600 }}>
 					대기 {filteredData.length}건
 				</Tag>
 			</div>
