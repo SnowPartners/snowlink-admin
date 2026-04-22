@@ -23,7 +23,7 @@ const getRowStatusKey = (item: MatchingHistoryItem): StatusFilter => {
 	const m = (item.matchingStatus ?? '').toUpperCase();
 	const l = (item.lessonPostStatus ?? '').toUpperCase();
 
-	if (m.includes('CANCEL') || l.includes('CANCEL')) return 'CANCELLED';
+	if (m.includes('CANCEL') || l.includes('CANCEL') || m.includes('REJECT')) return 'CANCELLED';
 	if (m.includes('COMPLETED') || l.includes('COMPLETED') || m.includes('FINISHED') || l.includes('FINISHED')) return 'COMPLETED';
 	if (m.includes('IN_PROGRESS') || l.includes('IN_PROGRESS') || m.includes('ONGOING')) return 'IN_PROGRESS';
 	if (
@@ -98,13 +98,14 @@ const MatchingsPage = () => {
 		{
 			title: '매칭 ID',
 			key: 'displayId',
-			width: 110,
+			width: 122,
 			render: (_, record) => `MJ-${String(record.matchingId).padStart(3, '0')}`,
 		},
 		{
 			title: '강습 제목',
 			dataIndex: 'instructorTitle',
 			key: 'instructorTitle',
+			width: 120,
 			ellipsis: true,
 			render: (text: string) => <span style={{ fontWeight: 600 }}>{text}</span>,
 		},
@@ -112,27 +113,27 @@ const MatchingsPage = () => {
 			title: '스키장',
 			dataIndex: 'resort',
 			key: 'resort',
-			width: 140,
+			width: 156,
 			ellipsis: true,
 		},
 		{
 			title: '일정',
 			dataIndex: 'lessonDate',
 			key: 'lessonDate',
-			width: 200,
+			width: 220,
 			ellipsis: true,
 		},
 		{
 			title: '결제가격',
 			key: 'paymentAmount',
-			width: 120,
+			width: 132,
 			align: 'right',
 			render: (_, record) => <span style={{ fontWeight: 600 }}>{formatMoney(record.paymentAmount ?? 0)}</span>,
 		},
 		{
 			title: '상태',
 			key: 'status',
-			width: 120,
+			width: 132,
 			align: 'center',
 			render: (_, record) => {
 				const style = getMatchingStatusChip(record.matchingStatus);
@@ -247,7 +248,7 @@ const MatchingsPage = () => {
 					columns={columns}
 					dataSource={filteredRows}
 					pagination={false}
-					scroll={{ x: 720 }}
+					scroll={{ x: 882 }}
 				/>
 			</div>
 		</div>
