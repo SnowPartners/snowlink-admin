@@ -121,7 +121,7 @@ const DashboardPage = () => {
                       style={{
                         border: 'none',
                         borderRadius: 999,
-                        padding: '2px 10px',
+                        padding: '1px 10px 2px',
                         fontWeight: 600,
                         color: statusStyle.color,
                         backgroundColor: statusStyle.backgroundColor,
@@ -147,7 +147,7 @@ const DashboardPage = () => {
                     </div>
                   </div>
                   <Tag
-                    style={{ border: 'none', borderRadius: 999, padding: '2px 10px', fontWeight: 600, color: '#92400e', backgroundColor: '#fef3c7' }}
+                    style={{ border: 'none', borderRadius: 999, padding: '1px 10px 2px', fontWeight: 600, color: '#92400e', backgroundColor: '#fef3c7' }}
                   >
                     심사중
                   </Tag>

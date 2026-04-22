@@ -88,7 +88,7 @@ const ProfileReviewPage = () => {
       key: 'reviewStatus',
       render: () => (
         <Tag
-          style={{ margin: 0, border: 'none', borderRadius: 999, padding: '2px 10px', fontWeight: 600, color: '#b45309', backgroundColor: '#fef3c7' }}
+          style={{ margin: 0, border: 'none', borderRadius: 999, padding: '1px 10px 2px', fontWeight: 600, color: '#b45309', backgroundColor: '#fef3c7' }}
         >
           심사중
         </Tag>
@@ -157,7 +157,7 @@ const ProfileReviewPage = () => {
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ fontSize: 13, color: '#6b7280', fontWeight: 600 }}>심사 대기 현황</div>
-          <Tag color='blue' style={{ borderRadius: 999, padding: '2px 10px', fontWeight: 600 }}>
+          <Tag color='blue' style={{ borderRadius: 999, padding: '1px 10px 2px', fontWeight: 600 }}>
             대기 {reviewStatusCount}건
           </Tag>
         </div>
