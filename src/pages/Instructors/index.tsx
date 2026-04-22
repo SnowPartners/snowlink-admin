@@ -55,37 +55,48 @@ const InstructorListPage = () => {
 			title: '강사 ID',
 			dataIndex: 'instructorId',
 			key: 'instructorId',
+			width: 100,
 		},
 		{
 			title: '이름',
 			dataIndex: 'name',
 			key: 'name',
+			width: 168,
+			ellipsis: true,
 		},
 		{
 			title: '강습 종목',
 			dataIndex: 'lessonType',
 			key: 'lessonType',
+			width: 100,
 		},
 		{
 			title: '강습 스키장',
 			dataIndex: 'resorts',
 			key: 'resorts',
+			width: 132,
+			ellipsis: true,
 			render: (resorts: Resort[]) => resorts.join(', '),
 		},
 		{
 			title: '이메일',
 			dataIndex: 'email',
 			key: 'email',
+			ellipsis: true,
 		},
 		{
 			title: '경력',
 			dataIndex: 'experience',
 			key: 'experience',
+			width: 96,
+			render: (value: number) => `${value}년`,
 		},
 		{
 			title: '자격증 레벨',
 			dataIndex: 'certificationLevel',
 			key: 'certificationLevel',
+			width: 200,
+			ellipsis: true,
 		},
 	];
 
