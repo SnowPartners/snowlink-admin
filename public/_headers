@@ -1,0 +1,6 @@
+# Cloudflare Pages: module scripts require a JavaScript MIME type (not application/octet-stream).
+/assets/*.js
+  Content-Type: application/javascript; charset=utf-8
+
+/assets/*.mjs
+  Content-Type: application/javascript; charset=utf-8
