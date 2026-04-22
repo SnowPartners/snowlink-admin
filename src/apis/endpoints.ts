@@ -22,7 +22,6 @@ export const ENDPOINTS = {
 		getInstructorDetail: (instructorId: string) => `/api/linksnow/admin/instructors/${instructorId}`,
 	},
 	dashboard: {
-		getSettlementStatistics: '/api/admin/settlements/statistics',
 		getInstructorMatchingHistory: '/api/linksnow/admin/matchings/instructor/history',
 	},
 };

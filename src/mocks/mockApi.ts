@@ -15,7 +15,6 @@ import type {
 } from '@/types/apis/profileReview';
 import type {
 	GetInstructorMatchingHistoryResponse,
-	GetSettlementStatisticsResponse,
 } from '@/types/apis/dashboard';
 import type {
 	GetInstructorDetailResponse,
@@ -227,15 +226,6 @@ const pendingCertificationReviews: GetCertificationRenewalPendingListResponse['d
 	},
 ];
 
-const settlementStatistics: GetSettlementStatisticsResponse['data'] = {
-	yearMonth: null,
-	totalCount: 84,
-	totalAmount: 5000000,
-	completedCount: 1203,
-	pendingCount: 2,
-	cancelledCount: 0,
-};
-
 const matchingHistory: GetInstructorMatchingHistoryResponse['data'] = [
 	{
 		matchingId: 1,
@@ -412,11 +402,6 @@ export const mockPostRejectCertificationRenewal = async (
 ): Promise<PostRejectCertificationRenewalResponse> => {
 	await delay();
 	return makeResponse<void>(undefined);
-};
-
-export const mockGetSettlementStatistics = async (): Promise<GetSettlementStatisticsResponse> => {
-	await delay();
-	return makeResponse(settlementStatistics);
 };
 
 export const mockGetInstructorMatchingHistory = async (): Promise<GetInstructorMatchingHistoryResponse> => {

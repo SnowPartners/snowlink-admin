@@ -1,14 +1,5 @@
 import type { BaseResponse } from './common';
 
-export interface SettlementStatistics {
-	yearMonth: string | null;
-	totalCount: number;
-	totalAmount: number;
-	completedCount: number;
-	pendingCount: number;
-	cancelledCount: number;
-}
-
 export interface MatchingHistoryItem {
 	matchingId: number;
 	lessonPostId: number;
@@ -26,5 +17,4 @@ export interface MatchingHistoryItem {
 	applicantCount?: number;
 }
 
-export type GetSettlementStatisticsResponse = BaseResponse<SettlementStatistics>;
 export type GetInstructorMatchingHistoryResponse = BaseResponse<MatchingHistoryItem[]>;

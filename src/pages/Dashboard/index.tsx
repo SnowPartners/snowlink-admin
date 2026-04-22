@@ -1,4 +1,4 @@
-import { getInstructorMatchingHistory, getSettlementStatistics } from '@/apis/dashboard';
+import { getInstructorMatchingHistory } from '@/apis/dashboard';
 import { getPendingReviewList } from '@/apis/profileReview';
 import { getInstructorList, getOwnerList } from '@/apis/users';
 import ErrorWithRetry from '@/components/fallback/ErrorWithRetry';
@@ -14,11 +14,6 @@ const DashboardPage = () => {
       { queryKey: [QUERY_KEYS.users.getOwnerList], queryFn: getOwnerList, staleTime: 5 * 60 * 1000 },
       { queryKey: [QUERY_KEYS.users.getInstructorList], queryFn: getInstructorList, staleTime: 5 * 60 * 1000 },
       {
-        queryKey: [QUERY_KEYS.dashboard.getSettlementStatistics],
-        queryFn: getSettlementStatistics,
-        staleTime: 5 * 60 * 1000,
-      },
-      {
         queryKey: [QUERY_KEYS.dashboard.getInstructorMatchingHistory],
         queryFn: getInstructorMatchingHistory,
         staleTime: 5 * 60 * 1000,
@@ -31,7 +26,7 @@ const DashboardPage = () => {
     ],
   });
 
-  const [ownersResult, instructorsResult, settlementResult, matchingHistoryResult, profileReviewResult] = results;
+  const [ownersResult, instructorsResult, matchingHistoryResult, profileReviewResult] = results;
 
   if (results.some((result) => result.isLoading)) {
     return <Loading />;
@@ -45,9 +40,20 @@ const DashboardPage = () => {
 
   const ownerCount = ownersResult.data?.data?.length ?? 0;
   const instructorCount = instructorsResult.data?.data?.length ?? 0;
-  const settlementStatistics = settlementResult.data?.data;
   const matchingHistory = matchingHistoryResult.data?.data ?? [];
   const pendingProfileReviews = profileReviewResult.data?.data ?? [];
+  const totalMatchingCount = matchingHistory.length;
+  const completedMatchingCount = matchingHistory.filter((item) => {
+    const matchingStatus = (item.matchingStatus ?? '').toUpperCase();
+    const lessonPostStatus = (item.lessonPostStatus ?? '').toUpperCase();
+    return (
+      matchingStatus.includes('COMPLETED') ||
+      matchingStatus.includes('FINISHED') ||
+      lessonPostStatus.includes('COMPLETED') ||
+      lessonPostStatus === 'FINISHED'
+    );
+  }).length;
+  const totalPaymentAmount = matchingHistory.reduce((sum, item) => sum + (item.paymentAmount ?? 0), 0);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -77,7 +83,7 @@ const DashboardPage = () => {
           <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 20 }}>
             <div style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', marginBottom: 12 }}>📋  구인 건수</div>
             <div style={{ fontSize: 36, fontWeight: 700, color: '#d97706', lineHeight: 1.1 }}>
-              {formatNumber(settlementStatistics?.totalCount ?? 0)} <span style={{ fontSize: 14, color: '#6b7280' }}>건</span>
+              {formatNumber(totalMatchingCount)} <span style={{ fontSize: 14, color: '#6b7280' }}>건</span>
             </div>
           </Card>
         </Col>
@@ -85,7 +91,7 @@ const DashboardPage = () => {
           <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 20 }}>
             <div style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', marginBottom: 12 }}>✅  매칭 완료</div>
             <div style={{ fontSize: 36, fontWeight: 700, color: '#059669', lineHeight: 1.1 }}>
-              {formatNumber(settlementStatistics?.completedCount ?? 0)} <span style={{ fontSize: 14, color: '#6b7280' }}>건</span>
+              {formatNumber(completedMatchingCount)} <span style={{ fontSize: 14, color: '#6b7280' }}>건</span>
             </div>
           </Card>
         </Col>
@@ -96,7 +102,7 @@ const DashboardPage = () => {
           <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 20 }}>
             <div style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', marginBottom: 12 }}>💰  총 거래액</div>
             <div style={{ fontSize: 36, fontWeight: 700, color: '#0f766e', lineHeight: 1.1 }}>
-              {formatNumber(settlementStatistics?.totalAmount ?? 0)} <span style={{ fontSize: 14, color: '#6b7280' }}>원</span>
+              {formatNumber(totalPaymentAmount)} <span style={{ fontSize: 14, color: '#6b7280' }}>원</span>
             </div>
           </Card>
         </Col>

@@ -20,7 +20,6 @@ export const QUERY_KEYS = {
     postRejectCertificationRenewal: 'postRejectCertificationRenewal',
   },
   dashboard: {
-    getSettlementStatistics: 'getSettlementStatistics',
     getInstructorMatchingHistory: 'getInstructorMatchingHistory',
   },
 };
