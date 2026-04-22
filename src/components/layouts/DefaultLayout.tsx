@@ -59,6 +59,8 @@ const DefaultLayout = () => {
 			return ['instructors'];
 		} else if (path === '/admin/owners') {
 			return ['owners'];
+		} else if (path === '/admin/matchings') {
+			return ['matchingManage'];
 		}
 
 		return ['dashboard'];
@@ -232,7 +234,7 @@ const DefaultLayout = () => {
 								key: 'matchingManage',
 								icon: <UnorderedListOutlined />,
 								label: '매칭 관리',
-								onClick: () => handleMenuClick('/admin'),
+								onClick: () => handleMenuClick('/admin/matchings'),
 							},
 						]}
 						selectedKeys={selectedKeys}
