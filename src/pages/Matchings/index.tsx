@@ -2,7 +2,7 @@ import { getInstructorMatchingHistory } from '@/apis/dashboard';
 import ErrorWithRetry from '@/components/fallback/ErrorWithRetry';
 import Loading from '@/components/fallback/Loading';
 import { QUERY_KEYS } from '@/constants/queryKeys';
-import { getMatchingStatusChip } from '@/constants/matchingStatusChip';
+import { getMatchingStatusChip, MATCHING_STATUS_CHIP_MAP } from '@/constants/matchingStatusChip';
 import type { MatchingHistoryItem } from '@/types/apis/dashboard';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
@@ -12,20 +12,19 @@ import { useMemo, useState } from 'react';
 
 type StatusFilter =
 	| 'ALL'
-	| 'PAYMENT_WAIT'
-	| 'MATCHING_WAIT'
-	| 'LESSON_WAIT'
-	| 'IN_PROGRESS'
-	| 'COMPLETED'
-	| 'CANCELLED';
+	| keyof typeof MATCHING_STATUS_CHIP_MAP;
 
-const getRowStatusKey = (item: MatchingHistoryItem): StatusFilter => {
+type SummaryStatus = 'PAYMENT_WAIT' | 'MATCHING_WAIT' | 'LESSON_WAIT' | 'APPROVED' | 'COMPLETED' | 'CANCELLED';
+
+const getRowStatusKey = (item: MatchingHistoryItem): SummaryStatus => {
 	const m = (item.matchingStatus ?? '').toUpperCase();
 	const l = (item.lessonPostStatus ?? '').toUpperCase();
 
-	if (m.includes('CANCEL') || l.includes('CANCEL') || m.includes('REJECT')) return 'CANCELLED';
-	if (m.includes('COMPLETED') || l.includes('COMPLETED') || m.includes('FINISHED') || l.includes('FINISHED')) return 'COMPLETED';
-	if (m.includes('IN_PROGRESS') || l.includes('IN_PROGRESS') || m.includes('ONGOING')) return 'IN_PROGRESS';
+	if (m.includes('CANCEL') || l === 'CANCELED' || l === 'CANCELLED' || m.includes('REJECT')) return 'CANCELLED';
+	if (m.includes('COMPLETED') || l.includes('COMPLETED') || m.includes('FINISHED') || l === 'FINISHED') return 'COMPLETED';
+	if (m.includes('APPROVED') || l === 'IN_PROGRESS' || m.includes('ONGOING')) return 'APPROVED';
+	if (l === 'MATCHED') return 'LESSON_WAIT';
+	if (l === 'RECRUITING') return 'MATCHING_WAIT';
 	if (
 		(m.includes('PAYMENT') || l.includes('PAYMENT')) &&
 		(m.includes('WAIT') || m.includes('PENDING') || l.includes('WAIT') || l.includes('PENDING'))
@@ -37,6 +36,11 @@ const getRowStatusKey = (item: MatchingHistoryItem): StatusFilter => {
 	if (m === 'PENDING' && l === 'PENDING') return 'LESSON_WAIT';
 
 	return 'MATCHING_WAIT';
+};
+
+const getStatusFilterKey = (item: MatchingHistoryItem): keyof typeof MATCHING_STATUS_CHIP_MAP | '' => {
+	const key = (item.matchingStatus ?? '').trim().toUpperCase();
+	return key in MATCHING_STATUS_CHIP_MAP ? (key as keyof typeof MATCHING_STATUS_CHIP_MAP) : '';
 };
 
 const formatMoney = (value: number) => `${new Intl.NumberFormat('ko-KR').format(value)}원`;
@@ -75,7 +79,7 @@ const MatchingsPage = () => {
 			const haystack = [displayId, item.instructorTitle, item.resort, String(item.lessonPostId)].join(' ').toLowerCase();
 			const matchSearch = !q || haystack.includes(q);
 			const matchResort = resortFilter === 'ALL' || item.resort === resortFilter;
-			const key = getRowStatusKey(item);
+			const key = getStatusFilterKey(item);
 			const matchStatus = statusFilter === 'ALL' || key === statusFilter;
 			return matchSearch && matchResort && matchStatus;
 		});
@@ -86,12 +90,10 @@ const MatchingsPage = () => {
 
 	const statusFilterButtons: { key: StatusFilter; label: string }[] = [
 		{ key: 'ALL', label: '전체' },
-		{ key: 'PAYMENT_WAIT', label: '결제대기' },
-		{ key: 'MATCHING_WAIT', label: '매칭대기' },
-		{ key: 'LESSON_WAIT', label: '강습대기' },
-		{ key: 'IN_PROGRESS', label: '강습중' },
-		{ key: 'COMPLETED', label: '강습종료' },
-		{ key: 'CANCELLED', label: '강습취소' },
+		...Object.entries(MATCHING_STATUS_CHIP_MAP).map(([key, value]) => ({
+			key: key as keyof typeof MATCHING_STATUS_CHIP_MAP,
+			label: value.text,
+		})),
 	];
 
 	const columns: ColumnsType<MatchingHistoryItem> = [
@@ -138,7 +140,17 @@ const MatchingsPage = () => {
 			render: (_, record) => {
 				const style = getMatchingStatusChip(record.matchingStatus);
 				return (
-					<Tag style={{ border: 'none', borderRadius: 999, margin: 0, color: style.color, backgroundColor: style.backgroundColor }}>
+					<Tag
+						style={{
+							border: 'none',
+							borderRadius: 999,
+							margin: 0,
+							padding: '1px 10px 2px',
+							fontWeight: 600,
+							color: style.color,
+							backgroundColor: style.backgroundColor,
+						}}
+					>
 						{style.text}
 					</Tag>
 				);
@@ -234,7 +246,18 @@ const MatchingsPage = () => {
 									size='small'
 									type={active ? 'primary' : 'default'}
 									onClick={() => setStatusFilter(btn.key)}
-									style={active ? {} : { borderColor: '#e5e7eb' }}
+									style={{
+										borderRadius: 999,
+										height: 24,
+										paddingInline: 10,
+										paddingBlock: 0,
+										fontSize: 11,
+										fontWeight: 700,
+										display: 'inline-flex',
+										alignItems: 'center',
+										justifyContent: 'center',
+										...(active ? {} : { borderColor: '#e5e7eb' }),
+									}}
 								>
 									{btn.label}
 								</Button>

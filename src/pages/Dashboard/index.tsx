@@ -53,38 +53,38 @@ const DashboardPage = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       <div>
         <h2 style={{ fontSize: 30, lineHeight: 1.15, fontWeight: 700, color: '#111827', marginBottom: 8 }}>대시보드</h2>
-        <p style={{ fontSize: 13, color: '#9ca3af' }}>SNOLINK 플랫폼 현황을 한눈에 확인하세요.</p>
+        <p style={{ fontSize: 13, fontWeight: 600, color: '#9ca3af' }}>SNOLINK 플랫폼 현황을 한눈에 확인하세요.</p>
       </div>
 
       <Row gutter={[12, 12]}>
         <Col xs={24} sm={12} lg={6}>
-          <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 18 }}>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>🏢 등록된 업체</div>
-            <div style={{ fontSize: 38, fontWeight: 700, color: '#2563eb', lineHeight: 1.1 }}>
+          <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 20 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', marginBottom: 12 }}>🏢  등록된 업체</div>
+            <div style={{ fontSize: 36, fontWeight: 700, color: '#2563eb', lineHeight: 1.1 }}>
               {formatNumber(ownerCount)} <span style={{ fontSize: 14, color: '#6b7280' }}>개</span>
             </div>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 18 }}>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>🎿 등록된 강사</div>
-            <div style={{ fontSize: 38, fontWeight: 700, color: '#7c3aed', lineHeight: 1.1 }}>
+          <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 20 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', marginBottom: 12 }}>🎿  등록된 강사</div>
+            <div style={{ fontSize: 36, fontWeight: 700, color: '#7c3aed', lineHeight: 1.1 }}>
               {formatNumber(instructorCount)} <span style={{ fontSize: 14, color: '#6b7280' }}>명</span>
             </div>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 18 }}>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>📋 구인 건수</div>
-            <div style={{ fontSize: 38, fontWeight: 700, color: '#d97706', lineHeight: 1.1 }}>
+          <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 20 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', marginBottom: 12 }}>📋  구인 건수</div>
+            <div style={{ fontSize: 36, fontWeight: 700, color: '#d97706', lineHeight: 1.1 }}>
               {formatNumber(settlementStatistics?.totalCount ?? 0)} <span style={{ fontSize: 14, color: '#6b7280' }}>건</span>
             </div>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 18 }}>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>✅ 매칭 완료</div>
-            <div style={{ fontSize: 38, fontWeight: 700, color: '#059669', lineHeight: 1.1 }}>
+          <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 20 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', marginBottom: 12 }}>✅  매칭 완료</div>
+            <div style={{ fontSize: 36, fontWeight: 700, color: '#059669', lineHeight: 1.1 }}>
               {formatNumber(settlementStatistics?.completedCount ?? 0)} <span style={{ fontSize: 14, color: '#6b7280' }}>건</span>
             </div>
           </Card>
@@ -93,9 +93,9 @@ const DashboardPage = () => {
 
       <Row gutter={[12, 12]}>
         <Col xs={24} lg={12}>
-          <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 18 }}>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>💰 총 거래액</div>
-            <div style={{ fontSize: 38, fontWeight: 700, color: '#0f766e', lineHeight: 1.1 }}>
+          <Card style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 20 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', marginBottom: 12 }}>💰  총 거래액</div>
+            <div style={{ fontSize: 36, fontWeight: 700, color: '#0f766e', lineHeight: 1.1 }}>
               {formatNumber(settlementStatistics?.totalAmount ?? 0)} <span style={{ fontSize: 14, color: '#6b7280' }}>원</span>
             </div>
           </Card>
@@ -117,7 +117,16 @@ const DashboardPage = () => {
                         {item.resort} · {item.lessonDate}
                       </div>
                     </div>
-                    <Tag style={{ border: 'none', borderRadius: 999, color: statusStyle.color, backgroundColor: statusStyle.backgroundColor }}>
+                    <Tag
+                      style={{
+                        border: 'none',
+                        borderRadius: 999,
+                        padding: '1px 10px 2px',
+                        fontWeight: 600,
+                        color: statusStyle.color,
+                        backgroundColor: statusStyle.backgroundColor,
+                      }}
+                    >
                       {statusStyle.text}
                     </Tag>
                   </div>
@@ -137,7 +146,11 @@ const DashboardPage = () => {
                       {item.id} · {new Date(item.tempInstructorUpdatedAt).toLocaleString('ko-KR')}
                     </div>
                   </div>
-                  <Tag style={{ border: 'none', borderRadius: 999, color: '#92400e', backgroundColor: '#fef3c7' }}>심사중</Tag>
+                  <Tag
+                    style={{ border: 'none', borderRadius: 999, padding: '1px 10px 2px', fontWeight: 600, color: '#92400e', backgroundColor: '#fef3c7' }}
+                  >
+                    심사중
+                  </Tag>
                 </div>
               ))}
             </div>

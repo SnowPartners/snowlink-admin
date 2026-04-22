@@ -9,6 +9,12 @@ import type { Resort } from '@/types/profile';
 import { useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 
+const LESSON_TYPE_LABEL_MAP: Record<string, string> = {
+	SKI: '스키',
+	SNOWBOARD: '스노보드',
+	BOTH: '스키/스노보드',
+};
+
 const InstructorListPage = () => {
 	const navigate = useNavigate();
 	const { instructorList, isLoading, error } = useInstructorList();
@@ -61,7 +67,7 @@ const InstructorListPage = () => {
 			title: '이름',
 			dataIndex: 'name',
 			key: 'name',
-			width: 168,
+			width: 140,
 			ellipsis: true,
 		},
 		{
@@ -69,12 +75,13 @@ const InstructorListPage = () => {
 			dataIndex: 'lessonType',
 			key: 'lessonType',
 			width: 100,
+			render: (value: string) => LESSON_TYPE_LABEL_MAP[value] ?? value,
 		},
 		{
 			title: '강습 스키장',
 			dataIndex: 'resorts',
 			key: 'resorts',
-			width: 132,
+			width: 500,
 			ellipsis: true,
 			render: (resorts: Resort[]) => resorts.join(', '),
 		},
@@ -82,6 +89,7 @@ const InstructorListPage = () => {
 			title: '이메일',
 			dataIndex: 'email',
 			key: 'email',
+			width: 220,
 			ellipsis: true,
 		},
 		{
@@ -202,6 +210,7 @@ const InstructorListPage = () => {
 					loading={isLoading}
 					rowKey={(record) => record.instructorId}
 					pagination={false}
+					scroll={{ x: 800 }}
 					onRow={(record) => ({
 						style: { cursor: 'pointer' },
 						onClick: () => {

@@ -1,19 +1,17 @@
 import { getPendingReviewList } from '@/apis/profileReview';
+import ProfileApproveConfirmModal from '@/pages/ProfileReviewDetail/components/ProfileApproveConfirmModal';
+import ProfileRejectConfirmModal from '@/pages/ProfileReviewDetail/components/ProfileRejectConfirmModal';
 import ErrorWithRetry from '@/components/fallback/ErrorWithRetry';
 import Loading from '@/components/fallback/Loading';
 import { QUERY_KEYS } from '@/constants/queryKeys';
+import { useModalStore } from '@/stores/useModalStore';
 import { formatDateToKorean } from '@/utils/dateFormat';
 import { useQuery } from '@tanstack/react-query';
-import { Input, Table, Tag } from 'antd';
+import { Button, Input, Space, Table, Tag } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
-
-interface ProfileReviewTableColumn {
-  title: string;
-  dataIndex: string;
-  key: string;
-}
+import type { ColumnsType } from 'antd/es/table';
 
 interface ProfileReviewTableData {
   reviewId: string;
@@ -24,41 +22,9 @@ interface ProfileReviewTableData {
   reviewDate: string;
 }
 
-const columns: ProfileReviewTableColumn[] = [
-  {
-    title: '심사 ID',
-    dataIndex: 'reviewId',
-    key: 'reviewId',
-  },
-  {
-    title: '이름',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: '심사 상태',
-    dataIndex: 'reviewStatus',
-    key: 'reviewStatus',
-  },
-  {
-    title: '사용자 ID',
-    dataIndex: 'userId',
-    key: 'userId',
-  },
-  {
-    title: '임시 프로필 ID',
-    dataIndex: 'tempInstructorId',
-    key: 'tempInstructorId',
-  },
-  {
-    title: '심사 제출 일시',
-    dataIndex: 'reviewDate',
-    key: 'reviewDate',
-  },
-];
-
 const ProfileReviewPage = () => {
   const navigate = useNavigate();
+  const { openModal } = useModalStore();
   const [searchKeyword, setSearchKeyword] = useState('');
   const {
     data: profileReviewList,
@@ -76,7 +42,7 @@ const ProfileReviewPage = () => {
   const tableData: ProfileReviewTableData[] = profileReviewList.data.map((item) => ({
     reviewId: item.id,
     name: item.userName,
-    reviewStatus: item.status,
+    reviewStatus: '심사중',
     userId: item.userId,
     tempInstructorId: item.tempInstructorId,
     reviewDate: formatDateToKorean(item.tempInstructorUpdatedAt),
@@ -96,6 +62,80 @@ const ProfileReviewPage = () => {
   }, [searchKeyword, tableData]);
 
   const reviewStatusCount = filteredData.length;
+
+  const handleOpenApproveModal = (tempInstructorId: string) => {
+    openModal(<ProfileApproveConfirmModal tempInstructorId={tempInstructorId} />);
+  };
+
+  const handleOpenRejectModal = (tempInstructorId: string) => {
+    openModal(<ProfileRejectConfirmModal tempInstructorId={tempInstructorId} />);
+  };
+
+  const columns: ColumnsType<ProfileReviewTableData> = [
+    {
+      title: '심사 ID',
+      dataIndex: 'reviewId',
+      key: 'reviewId',
+    },
+    {
+      title: '이름',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: '심사 상태',
+      dataIndex: 'reviewStatus',
+      key: 'reviewStatus',
+      render: () => (
+        <Tag
+          style={{ margin: 0, border: 'none', borderRadius: 999, padding: '1px 10px 2px', fontWeight: 600, color: '#b45309', backgroundColor: '#fef3c7' }}
+        >
+          심사중
+        </Tag>
+      ),
+    },
+    {
+      title: '사용자 ID',
+      dataIndex: 'userId',
+      key: 'userId',
+    },
+    {
+      title: '임시 프로필 ID',
+      dataIndex: 'tempInstructorId',
+      key: 'tempInstructorId',
+    },
+    {
+      title: '심사 제출 일시',
+      dataIndex: 'reviewDate',
+      key: 'reviewDate',
+    },
+    {
+      title: '처리',
+      key: 'actions',
+      render: (_value, record) => (
+        <Space>
+          <Button
+            type='primary'
+            onClick={(event) => {
+              event.stopPropagation();
+              handleOpenApproveModal(record.tempInstructorId);
+            }}
+          >
+            승인
+          </Button>
+          <Button
+            danger
+            onClick={(event) => {
+              event.stopPropagation();
+              handleOpenRejectModal(record.tempInstructorId);
+            }}
+          >
+            거절
+          </Button>
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -117,7 +157,7 @@ const ProfileReviewPage = () => {
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ fontSize: 13, color: '#6b7280', fontWeight: 600 }}>심사 대기 현황</div>
-          <Tag color='blue' style={{ borderRadius: 999 }}>
+          <Tag color='blue' style={{ borderRadius: 999, padding: '1px 10px 2px', fontWeight: 600 }}>
             대기 {reviewStatusCount}건
           </Tag>
         </div>
