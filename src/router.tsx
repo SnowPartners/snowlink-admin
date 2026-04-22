@@ -9,6 +9,7 @@ import OwnerListPage from './pages/Owners';
 import OwnerDetailPage from './pages/OwnerDetail';
 import CertificationRenewalReviewPage from './pages/CertificationRenewalReview';
 import DashboardPage from './pages/Dashboard';
+import MatchingsPage from './pages/Matchings';
 
 export const router = createBrowserRouter([
 	{
@@ -50,6 +51,10 @@ export const router = createBrowserRouter([
 			{
 				path: 'certification-renewal-review',
 				element: <CertificationRenewalReviewPage />,
+			},
+			{
+				path: 'matchings',
+				element: <MatchingsPage />,
 			},
 		],
 	},

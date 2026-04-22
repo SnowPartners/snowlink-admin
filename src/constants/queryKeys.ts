@@ -19,4 +19,8 @@ export const QUERY_KEYS = {
     postApproveCertificationRenewal: 'postApproveCertificationRenewal',
     postRejectCertificationRenewal: 'postRejectCertificationRenewal',
   },
+  dashboard: {
+    getSettlementStatistics: 'getSettlementStatistics',
+    getInstructorMatchingHistory: 'getInstructorMatchingHistory',
+  },
 };

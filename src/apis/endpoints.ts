@@ -21,4 +21,8 @@ export const ENDPOINTS = {
 		getInstructorList: '/api/linksnow/admin/instructors',
 		getInstructorDetail: (instructorId: string) => `/api/linksnow/admin/instructors/${instructorId}`,
 	},
+	dashboard: {
+		getSettlementStatistics: '/api/admin/settlements/statistics',
+		getInstructorMatchingHistory: '/api/linksnow/admin/matchings/instructor/history',
+	},
 };
