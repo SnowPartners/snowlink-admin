@@ -2,6 +2,7 @@ import { getInstructorMatchingHistory } from '@/apis/dashboard';
 import ErrorWithRetry from '@/components/fallback/ErrorWithRetry';
 import Loading from '@/components/fallback/Loading';
 import { QUERY_KEYS } from '@/constants/queryKeys';
+import { getMatchingStatusChip } from '@/constants/matchingStatusChip';
 import type { MatchingHistoryItem } from '@/types/apis/dashboard';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
@@ -38,26 +39,7 @@ const getRowStatusKey = (item: MatchingHistoryItem): StatusFilter => {
 	return 'MATCHING_WAIT';
 };
 
-const statusChipMap: Record<
-	StatusFilter,
-	{ label: string; color: string; backgroundColor: string } | null
-> = {
-	ALL: null,
-	PAYMENT_WAIT: { label: '결제대기', color: '#b45309', backgroundColor: '#fef3c7' },
-	MATCHING_WAIT: { label: '매칭대기', color: '#2563eb', backgroundColor: '#dbeafe' },
-	LESSON_WAIT: { label: '강습대기', color: '#7c3aed', backgroundColor: '#ede9fe' },
-	IN_PROGRESS: { label: '강습중', color: '#db2777', backgroundColor: '#fce7f3' },
-	COMPLETED: { label: '강습종료', color: '#059669', backgroundColor: '#d1fae5' },
-	CANCELLED: { label: '강습취소', color: '#dc2626', backgroundColor: '#fee2e2' },
-};
-
 const formatMoney = (value: number) => `${new Intl.NumberFormat('ko-KR').format(value)}원`;
-
-const inferSubjectFromTitle = (title: string): string | undefined => {
-	if (title.includes('스노보드')) return '스노보드';
-	if (title.includes('스키')) return '스키';
-	return undefined;
-};
 
 const MatchingsPage = () => {
 	const { data, isLoading, error } = useQuery({
@@ -127,12 +109,6 @@ const MatchingsPage = () => {
 			render: (text: string) => <span style={{ fontWeight: 600 }}>{text}</span>,
 		},
 		{
-			title: '종목',
-			key: 'subject',
-			width: 100,
-			render: (_, record) => record.subject ?? inferSubjectFromTitle(record.instructorTitle) ?? '-',
-		},
-		{
 			title: '스키장',
 			dataIndex: 'resort',
 			key: 'resort',
@@ -147,13 +123,6 @@ const MatchingsPage = () => {
 			ellipsis: true,
 		},
 		{
-			title: '구인수',
-			key: 'headcount',
-			width: 90,
-			align: 'right',
-			render: (_, record) => (record.headcount != null ? `${record.headcount}명` : '-'),
-		},
-		{
 			title: '결제가격',
 			key: 'paymentAmount',
 			width: 120,
@@ -161,24 +130,15 @@ const MatchingsPage = () => {
 			render: (_, record) => <span style={{ fontWeight: 600 }}>{formatMoney(record.paymentAmount ?? 0)}</span>,
 		},
 		{
-			title: '신청강사',
-			key: 'applicantCount',
-			width: 100,
-			align: 'right',
-			render: (_, record) => (record.applicantCount != null ? `${record.applicantCount}명` : '-'),
-		},
-		{
 			title: '상태',
 			key: 'status',
 			width: 120,
 			align: 'center',
 			render: (_, record) => {
-				const key = getRowStatusKey(record);
-				const style = statusChipMap[key];
-				if (!style) return <Tag>-</Tag>;
+				const style = getMatchingStatusChip(record.matchingStatus);
 				return (
 					<Tag style={{ border: 'none', borderRadius: 999, margin: 0, color: style.color, backgroundColor: style.backgroundColor }}>
-						{style.label}
+						{style.text}
 					</Tag>
 				);
 			},
@@ -287,7 +247,7 @@ const MatchingsPage = () => {
 					columns={columns}
 					dataSource={filteredRows}
 					pagination={false}
-					scroll={{ x: 960 }}
+					scroll={{ x: 720 }}
 				/>
 			</div>
 		</div>

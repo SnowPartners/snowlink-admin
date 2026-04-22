@@ -4,6 +4,7 @@ import { getInstructorList, getOwnerList } from '@/apis/users';
 import ErrorWithRetry from '@/components/fallback/ErrorWithRetry';
 import Loading from '@/components/fallback/Loading';
 import { QUERY_KEYS } from '@/constants/queryKeys';
+import { getMatchingStatusChip } from '@/constants/matchingStatusChip';
 import { Card, Col, Row, Tag } from 'antd';
 import { useQueries } from '@tanstack/react-query';
 
@@ -47,13 +48,6 @@ const DashboardPage = () => {
   const settlementStatistics = settlementResult.data?.data;
   const matchingHistory = matchingHistoryResult.data?.data ?? [];
   const pendingProfileReviews = profileReviewResult.data?.data ?? [];
-
-  const statusStyleMap: Record<string, { text: string; color: string; backgroundColor: string }> = {
-    COMPLETED: { text: '매칭완료', color: '#2563eb', backgroundColor: '#dbeafe' },
-    IN_PROGRESS: { text: '강습중', color: '#db2777', backgroundColor: '#fce7f3' },
-    PENDING: { text: '강습대기', color: '#7c3aed', backgroundColor: '#ede9fe' },
-    CANCELLED: { text: '취소됨', color: '#d97706', backgroundColor: '#fef3c7' },
-  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -113,11 +107,7 @@ const DashboardPage = () => {
           <Card title='최근 매칭 현황' style={{ borderRadius: 12, borderColor: '#eff2f8' }} bodyStyle={{ padding: 0 }}>
             <div style={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 16 }}>
               {matchingHistory.slice(0, 4).map((item) => {
-                const statusStyle = statusStyleMap[item.matchingStatus] ?? {
-                  text: item.matchingStatus,
-                  color: '#6b7280',
-                  backgroundColor: '#f3f4f6',
-                };
+                const statusStyle = getMatchingStatusChip(item.matchingStatus);
 
                 return (
                   <div key={item.matchingId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
