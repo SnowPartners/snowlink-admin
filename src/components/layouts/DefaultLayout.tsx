@@ -184,7 +184,7 @@ const DefaultLayout = () => {
 								label: (
 									<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
 										<span>사용자</span>
-										<Badge count={totalUserSectionCount} showZero size='small' color='#ef4444' />
+										<Badge count={totalUserSectionCount} overflowCount={999} showZero size='small' color='#ef4444' />
 									</div>
 								),
 								children: [
@@ -193,7 +193,7 @@ const DefaultLayout = () => {
 										label: (
 											<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
 												<span>업체 관리</span>
-												<Badge count={ownerCount} showZero size='small' color='#ef4444' />
+												<Badge count={ownerCount} overflowCount={999} showZero size='small' color='#ef4444' />
 											</div>
 										),
 										onClick: () => handleMenuClick('/admin/owners'),
@@ -203,7 +203,7 @@ const DefaultLayout = () => {
 										label: (
 											<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
 												<span>강사 관리</span>
-												<Badge count={instructorCount} showZero size='small' color='#ef4444' />
+												<Badge count={instructorCount} overflowCount={999} showZero size='small' color='#ef4444' />
 											</div>
 										),
 										onClick: () => handleMenuClick('/admin/instructors'),
@@ -213,7 +213,7 @@ const DefaultLayout = () => {
 										label: (
 											<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
 												<span>강사 프로필 심사</span>
-												<Badge count={profileReviewPendingCount} showZero size='small' color='#ef4444' />
+												<Badge count={profileReviewPendingCount} overflowCount={999} showZero size='small' color='#ef4444' />
 											</div>
 										),
 										onClick: () => handleMenuClick('/admin/profile-review'),
@@ -223,7 +223,7 @@ const DefaultLayout = () => {
 										label: (
 											<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
 												<span>자격증 갱신 심사</span>
-												<Badge count={certificationRenewalPendingCount} showZero size='small' color='#ef4444' />
+												<Badge count={certificationRenewalPendingCount} overflowCount={999} showZero size='small' color='#ef4444' />
 											</div>
 										),
 										onClick: () => handleMenuClick('/admin/certification-renewal-review'),
